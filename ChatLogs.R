@@ -2,13 +2,18 @@ get_current_user <- function() {
   return("Person 0")
 }
 
-get_contacts <- function(user) {
+get_users <- function() {
   return(
-    c("Person 1", "Person 2", "Person 3", "Person 4", "Person 5")
+    c("Person 0", "Person 1", "Person 2", "Person 3", "Person 4", "Person 5")
   )
 }
 
-p1Chat <- matrix(
+get_contacts <- function(user) {
+  users <- get_users()
+  return(users[users != user])
+}
+
+p0p1Chat <- matrix(
   nrow=3,
   c(
     "Person 0", "Hi", "10:31",
@@ -42,7 +47,7 @@ p1Chat <- matrix(
   )
 )
 
-p2Chat <- matrix(
+p0p2Chat <- matrix(
   nrow=3,
   c(
     "Person 0", "Hi", "10:31",
@@ -51,7 +56,7 @@ p2Chat <- matrix(
   )
 )
 
-p3Chat <- matrix(
+p0p3Chat <- matrix(
   nrow=3,
   c(
     "Person 0", "Hi", "10:31",
@@ -60,7 +65,7 @@ p3Chat <- matrix(
   )
 )
 
-p4Chat <- matrix(
+p0p4Chat <- matrix(
   nrow=3,
   c(
     "Person 0", "Hi", "10:31",
@@ -69,7 +74,7 @@ p4Chat <- matrix(
   )
 )
 
-p5Chat <- matrix(
+p0p5Chat <- matrix(
   nrow=3,
   c(
     "Person 0", "Hi", "10:31",
@@ -83,16 +88,18 @@ get_chat_log <- function(user, contact) {
     return(NULL)
   }
   
-  if (contact == "Person 1") {
-    return(p1Chat)
-  } else if (contact == "Person 2") {
-    return(p2Chat)
-  } else if (contact == "Person 3") {
-    return(p3Chat)
-  } else if (contact == "Person 4") {
-    return(p4Chat)
-  } else if (contact == "Person 5") {
-    return(p5Chat)
+  if (user == "Person 0") {
+    if (contact == "Person 1") {
+      return(p0p1Chat)
+    } else if (contact == "Person 2") {
+      return(p0p2Chat)
+    } else if (contact == "Person 3") {
+      return(p0p3Chat)
+    } else if (contact == "Person 4") {
+      return(p0p4Chat)
+    } else if (contact == "Person 5") {
+      return(p0p5Chat)
+    }
   }
 }
 
@@ -101,15 +108,17 @@ set_chat_log <- function(user, contact, chatLog) {
     return()
   }
   
-  if (contact == "Person 1") {
-    p1Chat <<- chatLog
-  } else if (contact == "Person 2") {
-    p2Chat <<- chatLog
-  } else if (contact == "Person 3") {
-    p3Chat <<- chatLog
-  } else if (contact == "Person 4") {
-    p4Chat <<- chatLog
-  } else if (contact == "Person 5") {
-    p5Chat <<- chatLog
+  if (user == "Person 0") {
+    if (contact == "Person 1") {
+      p0p1Chat <<- chatLog
+    } else if (contact == "Person 2") {
+      p0p2Chat <<- chatLog
+    } else if (contact == "Person 3") {
+      p0p3Chat <<- chatLog
+    } else if (contact == "Person 4") {
+      p0p4Chat <<- chatLog
+    } else if (contact == "Person 5") {
+      p0p5Chat <<- chatLog
+    }
   }
 }
