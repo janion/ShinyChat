@@ -37,11 +37,8 @@ create_application_server <- function(input, output, session, user_info) {
     fromUser(),
     {
       currentContact(NULL)
-      if (fromUser() != user_info$user) {
-        shinyjs::disable("messageBox")
-      } else {
-        shinyjs::enable("messageBox")
-      }
+      shinyjs::toggleState(id = "messageBox", condition = {fromUser() == user_info$user})
+      shinyjs::toggleState(id = "sendBtn", condition = {fromUser() == user_info$user})
     }
   )
   
