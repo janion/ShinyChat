@@ -1,6 +1,7 @@
 library(shiny)
+library(shinyjs)
 library(shinymanager)
-library(keyring)
+# library(keyring)
 
 source("ChatUi.R")
 source("ChatServer.R")
@@ -13,26 +14,26 @@ credentials <- data.frame(
   stringsAsFactors = FALSE
 )
 
-key_set("R-shinymanager-key", "obiwankenobi")
+# key_set("R-shinymanager-key", "obiwankenobi")
 
 # Init the database
-create_db(
+shinymanager::create_db(
   credentials_data = credentials,
-  sqlite_path = "database.sqlite", # will be created
-  passphrase = key_get("R-shinymanager-key", "obiwankenobi")
+  sqlite_path = "users.sqlite", # will be created
+  passphrase = "jjj"
 )
 
-ui <- secure_app(create_application_ui(), enable_admin = TRUE)
+ui <- shinymanager::secure_app(create_application_ui(), enable_admin = TRUE)
 # ui <- create_application_ui()
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
   # check_credentials directly on sqlite db
-  user_info <- secure_server(
+  user_info <- shinymanager::secure_server(
     check_credentials = check_credentials(
-      "database.sqlite",
-      passphrase = key_get("R-shinymanager-key", "obiwankenobi")
+      "users.sqlite",
+      passphrase = "jjj"
     )
   )
 

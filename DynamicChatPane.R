@@ -3,12 +3,16 @@ library(stringr)
 
 # Create item for single chat message
 create_chat_pane <- function(username, currentChatLog) {
+  if (nrow(currentChatLog) == 0) {
+    return()
+  }
+  
   div(
     style = "overflow-y: scroll; height:70vh;",
     lapply(
-      seq(1, ncol(currentChatLog)),
-      function(col) {
-        create_message_item(username, currentChatLog[1, col], currentChatLog[2, col], currentChatLog[3, col])
+      seq(1, nrow(currentChatLog)),
+      function(row) {
+        create_message_item(username, currentChatLog$from_user[row], currentChatLog$content[row], currentChatLog$timestamp[row])
       }
     )
   )

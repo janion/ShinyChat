@@ -1,9 +1,13 @@
 library(shiny)
+library(DBI)
+library(RSQLite)
 
-source("ChatLogs.R")
+source("ChatData.R")
 source("DynamicChatPane.R")
 
 create_application_server <- function(input, output, session, user_info) {
+  
+  init_db()
   
   fromUser <- reactiveVal()
   currentContact <- reactiveVal()
@@ -83,8 +87,11 @@ create_application_server <- function(input, output, session, user_info) {
     {
       message <- input$messageBox
       updateTextInput(session = session, inputId = "messageBox", value = "")
-      currentChatLog(cbind(currentChatLog(), c(isolate(fromUser()), message, "Now")))
-      set_chat_log(isolate(fromUser()), isolate(currentContact()), currentChatLog())
+      message_sent(isolate(fromUser()),
+                   isolate(currentContact()),
+                   message,
+                   format(Sys.time(), "%Y/%m/%d %H:%M:%S"))
+      currentChatLog(get_chat_log(isolate(fromUser()), isolate(currentContact())))
     }
   )
   
