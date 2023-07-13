@@ -13,6 +13,21 @@ create_application_server <- function(input, output, session, user_info) {
   currentContact <- reactiveVal()
   currentChatLog <- reactiveVal()
   
+  # Set chat log when current contact changes
+  observe({
+    currentChatLog(get_chat_log(fromUser(), currentContact()))
+  })
+  
+  last_update_time <- reactiveVal()
+  
+  # Check for database updates every 5s
+  observe({
+    invalidateLater(5000, session)
+    if (check_db_updated(fromUser(), currentContact(), last_update_time)) {
+      currentChatLog(get_chat_log(fromUser(), currentContact()))
+    }
+  })
+  
   # Setup admin status on client
   output$isAdmin <- reactive(as.logical(user_info$admin))
   outputOptions(output, "isAdmin", suspendWhenHidden = FALSE)
@@ -76,22 +91,17 @@ create_application_server <- function(input, output, session, user_info) {
     )
   })
   
-  # Set chat log when current contact changes
-  observe({
-    currentChatLog(get_chat_log(fromUser(), currentContact()))
-  })
-  
   # Add message to chat log and update Chat log in memory when send button clicked
   observeEvent(
     input$sendBtn,
     {
       message <- input$messageBox
       updateTextInput(session = session, inputId = "messageBox", value = "")
-      message_sent(isolate(fromUser()),
-                   isolate(currentContact()),
+      message_sent(fromUser(),
+                   currentContact(),
                    message,
                    format(Sys.time(), "%Y/%m/%d %H:%M:%S"))
-      currentChatLog(get_chat_log(isolate(fromUser()), isolate(currentContact())))
+      currentChatLog(get_chat_log(fromUser(), currentContact()))
     }
   )
   

@@ -65,6 +65,34 @@ get_chat_log <- function(user, contact) {
   return(df)
 }
 
+check_db_updated <- function(user, contact, last_update_time) {
+  update_time <- get_last_update_time(user, contact)
+  if (!is.null(update_time) && (length(last_update_time()) == 0 || update_time != last_update_time())) {
+    last_update_time(update_time)
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+get_last_update_time <- function(user, contact) {
+  if (length(contact) == 0) {
+    return(NULL)
+  }
+  
+  query <- paste0("SELECT timestamp ",
+                  "FROM messages ",
+                  "WHERE ",
+                  "( from_user = '", user, "' AND to_user = '", contact, "' ) ",
+                  "OR ",
+                  "( from_user = '", contact, "' AND to_user = '", user, "' ) ",
+                  "ORDER BY timestamp DESC ",
+                  "LIMIT 1")
+  
+  df <- execute_query(query)
+  
+  return(df$timestamp)
+}
+
 message_sent <- function(user, contact, message, timestamp) {
   df = data.frame(from_user = user, to_user = contact, content = message, timestamp = timestamp)
   

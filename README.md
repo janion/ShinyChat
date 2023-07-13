@@ -9,4 +9,4 @@ Shiny for R app to allow for private messaging with admin oversight
 - [ ] Explore having users and messages in the same database
 - [ ] Remove database password from source code
 - [ ] Add safety messaging to chat pane
-- [ ] Make chat log a reactive poll
+- [X] Make chat log a reactive poll
